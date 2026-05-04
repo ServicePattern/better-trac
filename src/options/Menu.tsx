@@ -6,6 +6,11 @@ const apps = [
     title: 'Image Combiner',
     description: 'Paste, arrange, and combine screenshots into one image',
   },
+  {
+    path: '/md-preview',
+    title: 'MD Preview',
+    description: 'Preview markdown attachments from Trac tickets',
+  },
 ];
 
 export function Menu() {
