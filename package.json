@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:firefox": "BROWSER=firefox vite",
+    "dev:firefox": "vite --mode firefox",
     "build": "tsc && vite build",
-    "build:firefox": "tsc && BROWSER=firefox vite build"
+    "build:firefox": "tsc && vite build --mode firefox"
   },
   "dependencies": {
     "fflate": "^0.8.2",

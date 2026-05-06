@@ -15,12 +15,13 @@ function generateManifest() {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     tailwindcss(),
     webExtension({
       manifest: generateManifest,
+      browser: mode === "firefox" ? "firefox" : (process.env.BROWSER || "chrome"),
     }),
   ],
-});
+}));
