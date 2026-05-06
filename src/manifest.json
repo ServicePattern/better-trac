@@ -32,6 +32,7 @@
       "run_at": "document_start"
     }
   ],
-  "permissions": ["scripting", "storage"],
-  "host_permissions": ["https://trac.brightpattern.com/*"]
+  "{{chrome}}.permissions": ["scripting", "storage"],
+  "{{chrome}}.host_permissions": ["https://trac.brightpattern.com/*"],
+  "{{firefox}}.permissions": ["scripting", "storage", "https://trac.brightpattern.com/*"]
 }
