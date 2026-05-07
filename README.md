@@ -2,25 +2,34 @@
 
 Enhances [trac.brightpattern.com](https://trac.brightpattern.com) with:
 
-1. **Inline attachment previews** — automatically renders images, videos, zip file contents, and HAR files directly on ticket pages (no need to download first).
-2. **Paste to upload** — on any ticket page, pressing `Ctrl+V`/`Cmd+V` outside a text field opens the attachment upload page in a new tab. On the upload page itself, pasting an image fills the file input automatically (with a filename prompt).
-3. **Image Combiner** — click the extension icon to open a tool for pasting, arranging, and combining multiple screenshots into one image, then copying it to the clipboard.
+1. **Inline attachment previews** — renders images, videos, zip contents, and HAR files directly on ticket pages.
+2. **Paste to upload** — `Ctrl+V`/`Cmd+V` outside a text field opens the upload page in a new tab; pasting an image on the upload page fills the file input automatically.
+3. **Image Combiner** — click the extension icon to paste, arrange, and combine screenshots into one image, then copy to clipboard.
 
 ## Installation
 
-1. Build the extension:
+### Option A — Download release
+
+Download the latest `.zip` from [GitHub Releases](https://github.com/ServicePattern/better-trac/releases) and unzip it.
+
+### Option B — Build from source
+
 ```
 yarn install
 yarn build
 ```
 
-**Chrome:**
+Output goes to `dist/`.
 
-2. Go to [chrome://extensions/](chrome://extensions/)
-3. Enable "Developer mode" in the top right corner.
-4. Click "Load unpacked" and select the `dist/` directory.
+---
 
-**Firefox:**
+### Load in Chrome
 
-2. Go to [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox)
-3. Click "Load Temporary Add-on" and select any file inside the `dist/` directory.
+1. Go to [chrome://extensions/](chrome://extensions/)
+2. Enable **Developer mode** (top right).
+3. Click **Load unpacked** → select the `dist/` folder.
+
+### Load in Firefox
+
+1. Go to [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox)
+2. Click **Load Temporary Add-on** → select any file inside `dist/`.
