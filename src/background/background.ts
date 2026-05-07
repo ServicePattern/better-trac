@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill';
 import { setPendingOptionsPageTask } from '../pendingOptionsPageTask';
 
-browser.action.onClicked.addListener(() => {
+(browser.browserAction || browser.action).onClicked.addListener(() => {
   browser.runtime.openOptionsPage();
 });
 
