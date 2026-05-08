@@ -1,8 +1,9 @@
-import { Unzip, unzipSync } from "fflate";
-import { sendMessage } from "../messaging";
 import { fetchMimeType } from "./utils/network";
-import { addStyle, createLayoutFromString } from "./utils/domUtils";
-import { listZip, openInBrowser } from "./utils/zip";
+import { pasteHarPreview } from "./attachments/harPreview";
+import { pasteMDPreview } from "./attachments/mdPreview";
+import { pasteVideoPreview } from "./attachments/videoPreview";
+import { pasteZipPreview } from "./attachments/zipPreview";
+import { pasteImagePreview } from "./attachments/imagePreview";
 
 const HANDLED_CLASS_NAME = 'better-tracced' as const
 
@@ -29,7 +30,7 @@ function addPasteListener() {
         return
     }
 
-    window.addEventListener('paste', (e) => {
+    window.addEventListener('paste', () => {
         if (
             document.activeElement &&
             document.activeElement instanceof HTMLElement &&
@@ -47,9 +48,6 @@ function addPasteListener() {
     })
 }
 
-/**
- * Finds all '/raw-attachment/' links and pastes preview after
- */
 async function pasteAttachmentPreviews() {
     const allLinkEls = document.getElementsByTagName('a');
 
@@ -95,157 +93,4 @@ async function pasteAttachmentPreviews() {
             console.warn('Better trac: failed to process attachment', attachmentLinkEl, error);
         }
     }
-}
-
-function pasteHarPreview(attachmentLinkEl: HTMLAnchorElement, attachmentUrl: string) {
-    addStyle('better-trac-har', `
-        .better-trac-har {
-            max-height: 400px;
-            border: 1px solid #ccc;
-            width: 100%;
-            padding: 4px;
-            overflow: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            cursor: pointer;
-        }
-    `)
-
-    const harLinkEl = createLayoutFromString(`
-        <div class="better-trac-har">
-            Open .HAR
-        </div>
-    `)
-
-    harLinkEl.addEventListener('click', async () => {
-        const res = await fetch(attachmentUrl);
-        const fileContentBuffer = new Uint8Array(await res.arrayBuffer());
-        openInBrowser(fileContentBuffer);
-    });
-
-    attachmentLinkEl.parentElement?.insertBefore(harLinkEl, attachmentLinkEl)
-}
-
-function pasteMDPreview(attachmentLinkEl: HTMLAnchorElement, attachmentUrl: string) {
-    addStyle('better-trac-md', `
-        .better-trac-md {
-            max-height: 400px;
-            border: 1px solid #ccc;
-            width: 100%;
-            padding: 4px;
-            overflow: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            cursor: pointer;
-        }
-    `)
-
-    const mdLinkEl = createLayoutFromString(`
-        <div class="better-trac-md">
-            Preview .MD
-        </div>
-    `)
-
-    mdLinkEl.addEventListener('click', async () => {
-        const res = await fetch(attachmentUrl);
-        const text = await res.text();
-
-        await sendMessage({
-            type: 'openOptionsPage',
-            data: {
-                page: '/md-preview',
-                state: text
-            }
-        });
-    });
-
-    attachmentLinkEl.parentElement?.insertBefore(mdLinkEl, attachmentLinkEl)
-}
-
-function pasteVideoPreview(attachmentLinkEl: HTMLAnchorElement, attachmentUrl: string) {
-    const videoEl = createLayoutFromString(
-        `<video
-            style="
-                height: 400px;
-                width: 100%;
-            "
-            controls
-            src="${attachmentUrl}"
-        />`
-    )
-
-    attachmentLinkEl.parentElement?.insertBefore(videoEl, attachmentLinkEl)
-    console.log('Better trac: video added', videoEl);
-}
-
-async function pasteZipPreview(attachmentLinkEl: HTMLAnchorElement, attachmentUrl: string) {
-    const res = await fetch(attachmentUrl);
-    const buffer = new Uint8Array(await res.arrayBuffer());
-    const files = await listZip(buffer);
-
-    addStyle('better-trac-zip', `
-        .better-trac-zip {
-            max-height: 400px;
-            border: 1px solid #ccc;
-            width: 100%;
-            padding: 4px;
-            overflow: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            cursor: pointer;
-        }
-    `)
-
-    const zipTreeEl = createLayoutFromString(`<div class="better-trac-zip"></div>`)
-
-    files.map(filePath => {
-        addStyle('better-trac-zip-file', `
-            .better-trac-zip-file {
-                padding: 4px;
-                border-radius: 4px;
-                background: #f0f0f0;
-                cursor: pointer;
-            }
-            .better-trac-zip-file:hover {
-                background: #e0e0e0;
-            }
-        `)
-
-        const fileEl = createLayoutFromString(`
-            <div class="better-trac-zip-file">
-                ${filePath}
-            </div>
-        `)
-
-        fileEl.addEventListener('click', async () => {
-            const result = unzipSync(buffer, { filter: file => file.name === filePath });
-            const fileContentBuffer = result[filePath];
-
-            if (!fileContentBuffer) return
-
-            openInBrowser(fileContentBuffer);
-        });
-
-        zipTreeEl.appendChild(fileEl)
-    })
-
-    attachmentLinkEl.parentElement?.insertBefore(zipTreeEl, attachmentLinkEl)
-}
-
-function pasteImagePreview(attachmentLinkEl: HTMLAnchorElement, attachmentUrl: string) {
-    const imageEl = createLayoutFromString(
-        `<img
-            style="
-                max-height: 400px;
-                width: 100%;
-            "
-            src="${attachmentUrl}"
-        />`
-    )
-
-    attachmentLinkEl.parentElement?.insertBefore(imageEl, attachmentLinkEl)
-    console.log('Better trac: image added', imageEl);
 }
