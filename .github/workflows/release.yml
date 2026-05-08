@@ -50,12 +50,12 @@ jobs:
       - run: yarn build
 
       - name: Zip Chrome dist
-        run: zip -r better-trac-chrome-${{ needs.check.outputs.version }}.zip dist/
+        run: cd dist && zip -r ../better-trac-chrome-${{ needs.check.outputs.version }}.zip .
 
       - run: yarn build:firefox
 
       - name: Zip Firefox dist
-        run: zip -r better-trac-firefox-${{ needs.check.outputs.version }}.zip dist/
+        run: cd dist && zip -r ../better-trac-firefox-${{ needs.check.outputs.version }}.zip .
 
       - name: Release
         env:
