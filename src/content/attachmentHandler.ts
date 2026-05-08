@@ -1,4 +1,4 @@
-import { fetchMimeType } from "./utils/network";
+import { fetchHeaders } from "./utils/network";
 import { pasteHarPreview } from "./attachments/harPreview";
 import { pasteMDPreview } from "./attachments/mdPreview";
 import { pasteVideoPreview } from "./attachments/videoPreview";
@@ -30,24 +30,24 @@ export async function pasteAttachmentPreviews() {
                 return
             }
 
-            const attachmentMimeType = await fetchMimeType(attachmentUrl)
+            const { mimeType, contentLength } = await fetchHeaders(attachmentUrl)
 
-            if (attachmentMimeType?.startsWith('video/')) {
+            if (mimeType?.startsWith('video/')) {
                 pasteVideoPreview(attachmentLinkEl, attachmentUrl)
                 return
             }
 
-            if (attachmentMimeType?.startsWith('application/zip')) {
-                pasteZipPreview(attachmentLinkEl, attachmentUrl)
+            if (mimeType?.startsWith('application/zip')) {
+                pasteZipPreview(attachmentLinkEl, attachmentUrl, contentLength)
                 return
             }
 
-            if (attachmentMimeType?.startsWith('image/')) {
+            if (mimeType?.startsWith('image/')) {
                 pasteImagePreview(attachmentLinkEl, attachmentUrl)
                 return
             }
 
-            console.log('Better trac: unhandled mime', attachmentMimeType);
+            console.log('Better trac: unhandled mime', mimeType);
         } catch (error) {
             console.warn('Better trac: failed to process attachment', attachmentLinkEl, error);
         }
