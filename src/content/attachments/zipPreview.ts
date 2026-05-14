@@ -1,5 +1,6 @@
 import { unzipSync } from "fflate";
 import { addStyle, createLayoutFromString } from "../utils/domUtils";
+import { getMimeByExtension } from "../utils/mime";
 import { listZip, openInBrowser } from "../utils/zip";
 
 const MB_10 = 10 * 1024 * 1024;
@@ -81,7 +82,7 @@ async function renderZipTree(attachmentLinkEl: HTMLAnchorElement, attachmentUrl:
 
             if (!fileContentBuffer) return
 
-            openInBrowser(fileContentBuffer);
+            openInBrowser(fileContentBuffer, getMimeByExtension(filePath));
         });
 
         zipTreeEl.appendChild(fileEl)

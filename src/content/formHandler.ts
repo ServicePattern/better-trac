@@ -1,5 +1,5 @@
 /**
- * Waits for attachment form and adds paste event handler to make it possible to paste files directly
+ * adds paste event handler to make it possible to paste files directly
  */
 export async function handleAttachmentForm() {
     const attachmentFormEl = document.getElementById('attachment');

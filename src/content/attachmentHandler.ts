@@ -27,6 +27,7 @@ export async function pasteAttachmentPreviews() {
 
             const { mimeType, contentLength } = await fetchHeaders(attachmentUrl)
 
+            // https://trac.brightpattern.com/ticket/44083
             if (mimeType?.startsWith('video/')) {
                 pasteVideoPreview(attachmentLinkEl, attachmentUrl)
                 return
