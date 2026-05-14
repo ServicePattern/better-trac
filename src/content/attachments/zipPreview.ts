@@ -82,7 +82,9 @@ async function renderZipTree(attachmentLinkEl: HTMLAnchorElement, attachmentUrl:
 
             if (!fileContentBuffer) return
 
-            openInBrowser(fileContentBuffer, getMimeByExtension(filePath));
+            // sometimes media files are in inside .zip: https://trac.brightpattern.com/ticket/46812
+            const mimeFromExtension = getMimeByExtension(filePath)
+            openInBrowser(fileContentBuffer, mimeFromExtension);
         });
 
         zipTreeEl.appendChild(fileEl)
