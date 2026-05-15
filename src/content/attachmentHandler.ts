@@ -5,13 +5,19 @@ import { pasteVideoPreview } from "./attachments/videoPreview";
 import { pasteZipPreview } from "./attachments/zipPreview";
 import { pasteImagePreview } from "./attachments/imagePreview";
 
-export async function pasteAttachmentPreviews() {
+const PROCESSED_CLASSNAME = 'better-traced'
+
+export async function handleAttachmentPreviews() {
     const allLinkEls = document.getElementsByTagName('a');
 
-    const attachmentLinkEls = [...allLinkEls].filter(it => it.href.includes('/raw-attachment/'))
+    const attachmentLinkEls = [...allLinkEls].filter(it => {
+        return it.href.includes('/raw-attachment/') && !it.classList.contains(PROCESSED_CLASSNAME)
+    })
 
     attachmentLinkEls.forEach(async (attachmentLinkEl) => {
         try {
+            attachmentLinkEl.classList.add(PROCESSED_CLASSNAME)
+
             const attachmentUrl = attachmentLinkEl.href
 
             if (attachmentUrl.endsWith('.har')) {

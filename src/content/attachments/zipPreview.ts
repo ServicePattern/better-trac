@@ -80,9 +80,11 @@ async function renderZipTree(attachmentLinkEl: HTMLAnchorElement, attachmentUrl:
             const result = unzipSync(buffer, { filter: file => file.name === filePath });
             const fileContentBuffer = result[filePath];
 
-            if (!fileContentBuffer) return
+            if (!fileContentBuffer) {
+                return
+            }
 
-            // sometimes media files are in inside .zip: https://trac.brightpattern.com/ticket/46812
+            // we cannot know mime-type of files inside zip: https://trac.brightpattern.com/ticket/46812
             const mimeFromExtension = getMimeByExtension(filePath)
             openInBrowser(fileContentBuffer, mimeFromExtension);
         });
