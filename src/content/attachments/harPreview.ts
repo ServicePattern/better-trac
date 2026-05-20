@@ -4,7 +4,6 @@ import { openInBrowser } from "../utils/zip";
 export function pasteHarPreview(attachmentLinkEl: HTMLAnchorElement, attachmentUrl: string) {
     addStyle('better-trac-har', `
         .better-trac-har {
-            max-height: 400px;
             border: 1px solid #ccc;
             width: 100%;
             padding: 4px;

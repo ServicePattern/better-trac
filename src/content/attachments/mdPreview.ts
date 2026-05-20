@@ -4,7 +4,6 @@ import { addStyle, createLayoutFromString } from "../utils/domUtils";
 export function pasteMDPreview(attachmentLinkEl: HTMLAnchorElement, attachmentUrl: string) {
     addStyle('better-trac-md', `
         .better-trac-md {
-            max-height: 400px;
             border: 1px solid #ccc;
             width: 100%;
             padding: 4px;

@@ -5,7 +5,8 @@ export function pasteImagePreview(attachmentLinkEl: HTMLAnchorElement, attachmen
         `<img
             style="
                 max-height: 400px;
-                width: 100%;
+                max-width: 100%;
+                display: block;
             "
             src="${attachmentUrl}"
         />`
