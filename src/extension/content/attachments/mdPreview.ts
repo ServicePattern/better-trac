@@ -1,7 +1,10 @@
-import { sendMessage } from "../../messaging";
 import { addStyle, createLayoutFromString } from "../utils/domUtils";
 
-export function pasteMDPreview(attachmentLinkEl: HTMLAnchorElement, attachmentUrl: string) {
+export function pasteMDPreview(
+    attachmentLinkEl: HTMLAnchorElement,
+    attachmentUrl: string,
+    openMdPreview: (markdown: string) => void | Promise<unknown>,
+) {
     addStyle('better-trac-md', `
         .better-trac-md {
             border: 1px solid #ccc;
@@ -25,13 +28,7 @@ export function pasteMDPreview(attachmentLinkEl: HTMLAnchorElement, attachmentUr
         const res = await fetch(attachmentUrl);
         const text = await res.text();
 
-        await sendMessage({
-            type: 'openOptionsPage',
-            data: {
-                page: '/md-preview',
-                state: text
-            }
-        });
+        await openMdPreview(text);
     });
 
     attachmentLinkEl.parentElement?.insertBefore(mdLinkEl, attachmentLinkEl)

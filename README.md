@@ -25,10 +25,17 @@ Download the latest `.zip` from [GitHub Releases](https://github.com/ServicePatt
 
 ```
 yarn install
-yarn build
+yarn build        # extension  → dist/extension/
+yarn build:script # standalone → dist/standalone/
+yarn build:all    # both
 ```
 
-Output goes to `dist/`.
+## Build outputs
+
+Two separate bundles:
+
+- **`dist/extension/`** — the browser extension (Chrome/Firefox). Full feature set above.
+- **`dist/standalone/script.js`** — a self-contained script an admin adds to the Trac page for all users, enabling **inline attachment previews** without anyone installing the extension.
 
 ---
 
@@ -36,9 +43,9 @@ Output goes to `dist/`.
 
 1. Go to [chrome://extensions/](chrome://extensions/)
 2. Enable **Developer mode** (top right).
-3. Click **Load unpacked** → select the `dist/` folder.
+3. Click **Load unpacked** → select the `dist/extension/` folder.
 
 ### Load in Firefox
 
 1. Go to [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox)
-2. Click **Load Temporary Add-on** → select any file inside `dist/`.
+2. Click **Load Temporary Add-on** → select any file inside `dist/extension/`.

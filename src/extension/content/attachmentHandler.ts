@@ -7,7 +7,23 @@ import { pasteImagePreview } from "./attachments/imagePreview";
 
 const PROCESSED_CLASSNAME = 'better-traced'
 
-export async function handleAttachmentPreviews() {
+export type PreviewDeps = {
+    // MD preview opens the extension options page, so it needs the extension's
+    // messaging. Injected by the extension build; omitted by the standalone
+    // script (which has no extension runtime), where .md links are left as-is.
+    openMdPreview?: (markdown: string) => void | Promise<unknown>
+}
+
+// Run previews once, then re-run on a timer: changing "Modify Ticket" fields
+// soft-reloads the page, dropping previously injected previews.
+export function startAttachmentPreviews(deps: PreviewDeps = {}) {
+    handleAttachmentPreviews(deps)
+    setInterval(() => {
+        handleAttachmentPreviews(deps)
+    }, 1000)
+}
+
+export async function handleAttachmentPreviews(deps: PreviewDeps = {}) {
     const allLinkEls = document.getElementsByTagName('a');
 
     const attachmentLinkEls = [...allLinkEls].filter(it => {
@@ -26,8 +42,8 @@ export async function handleAttachmentPreviews() {
             }
 
             // https://trac.brightpattern.com/ticket/46620
-            if (attachmentUrl.endsWith('.md')) {
-                pasteMDPreview(attachmentLinkEl, attachmentUrl)
+            if (deps.openMdPreview && attachmentUrl.endsWith('.md')) {
+                pasteMDPreview(attachmentLinkEl, attachmentUrl, deps.openMdPreview)
                 return
             }
 

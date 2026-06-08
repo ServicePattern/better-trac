@@ -50,12 +50,17 @@ jobs:
       - run: yarn build
 
       - name: Zip Chrome dist
-        run: cd dist && zip -r ../better-trac-chrome-${{ needs.check.outputs.version }}.zip .
+        run: cd dist/extension && zip -r ../../better-trac-chrome-${{ needs.check.outputs.version }}.zip .
 
       - run: yarn build:firefox
 
       - name: Zip Firefox dist
-        run: cd dist && zip -r ../better-trac-firefox-${{ needs.check.outputs.version }}.zip .
+        run: cd dist/extension && zip -r ../../better-trac-firefox-${{ needs.check.outputs.version }}.zip .
+
+      - run: yarn build:script
+
+      - name: Zip standalone script
+        run: cd dist/standalone && zip -r ../../better-trac-standalone-${{ needs.check.outputs.version }}.zip .
 
       - name: Release
         env:
@@ -66,4 +71,5 @@ jobs:
             --title "$TAG" \
             --latest \
             better-trac-chrome-${{ needs.check.outputs.version }}.zip \
-            better-trac-firefox-${{ needs.check.outputs.version }}.zip
+            better-trac-firefox-${{ needs.check.outputs.version }}.zip \
+            better-trac-standalone-${{ needs.check.outputs.version }}.zip
