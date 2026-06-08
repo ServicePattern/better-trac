@@ -35,7 +35,7 @@ yarn build:all    # both
 Two separate bundles:
 
 - **`dist/extension/`** — the browser extension (Chrome/Firefox). Full feature set above.
-- **`dist/standalone/script.js`** — a self-contained script an admin adds to the Trac page for all users, enabling **inline attachment previews** without anyone installing the extension.
+- **`dist/standalone/better-trac.js`** — a self-contained script an admin adds to the Trac page for all users, enabling **inline attachment previews** without anyone installing the extension.
 
 ---
 

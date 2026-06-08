@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 
 // Standalone IIFE script, built separately from the extension.
-// Output: dist/standalone/script.js (self-contained, runs on inject).
+// Output: dist/standalone/better-trac.js (self-contained, runs on inject).
 export default defineConfig({
   publicDir: false,
   build: {
@@ -11,7 +11,7 @@ export default defineConfig({
       entry: "src/standalone/main.ts",
       formats: ["iife"],
       name: "BetterTracScript",
-      fileName: () => "script.js",
+      fileName: () => "better-trac.js",
     },
   },
 });

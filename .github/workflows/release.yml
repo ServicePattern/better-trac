@@ -59,9 +59,6 @@ jobs:
 
       - run: yarn build:script
 
-      - name: Zip standalone script
-        run: cd dist/standalone && zip -r ../../better-trac-standalone-${{ needs.check.outputs.version }}.zip .
-
       - name: Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -72,4 +69,4 @@ jobs:
             --latest \
             better-trac-chrome-${{ needs.check.outputs.version }}.zip \
             better-trac-firefox-${{ needs.check.outputs.version }}.zip \
-            better-trac-standalone-${{ needs.check.outputs.version }}.zip
+            dist/standalone/better-trac.js
