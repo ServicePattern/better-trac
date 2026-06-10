@@ -4,5 +4,14 @@
 // Built separately: `yarn build:script` → dist/standalone/better-trac.js
 
 import { startAttachmentPreviews } from "../extension/content/attachmentHandler";
+import { handleAttachmentForm } from "../extension/content/formHandler";
+import { addPasteListener } from "../extension/content/pasteListener";
 
-startAttachmentPreviews();
+
+main()
+
+function main() {
+    addPasteListener()
+    handleAttachmentForm()
+    startAttachmentPreviews()
+}
