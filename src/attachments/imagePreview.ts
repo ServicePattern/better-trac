@@ -28,16 +28,16 @@ export function pasteImagePreview(attachmentLinkEl: HTMLAnchorElement, attachmen
 function isInDescriptionOrComments(attachmentUrl: string) {
     const ticketbox = document.getElementById('ticketbox')
 
-    const isInDescription = Array.from(ticketbox?.querySelectorAll('img') || [])
+    const isInDescription = !!Array.from(ticketbox?.querySelectorAll('img') || [])
         .find(img => img.src === attachmentUrl)
 
     if (isInDescription) {
-        return false
+        return true
     }
 
     const changelog = document.getElementById('changelog')
 
-    const isInComments = Array.from(changelog?.querySelectorAll('img') || [])
+    const isInComments = !!Array.from(changelog?.querySelectorAll('img') || [])
         .find(img => img.src === attachmentUrl)
 
     return isInComments
