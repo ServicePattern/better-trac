@@ -49,16 +49,6 @@ jobs:
 
       - run: yarn build
 
-      - name: Zip Chrome dist
-        run: cd dist/extension && zip -r ../../better-trac-chrome-${{ needs.check.outputs.version }}.zip .
-
-      - run: yarn build:firefox
-
-      - name: Zip Firefox dist
-        run: cd dist/extension && zip -r ../../better-trac-firefox-${{ needs.check.outputs.version }}.zip .
-
-      - run: yarn build:script
-
       - name: Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -67,6 +57,4 @@ jobs:
           gh release create "$TAG" \
             --title "$TAG" \
             --latest \
-            better-trac-chrome-${{ needs.check.outputs.version }}.zip \
-            better-trac-firefox-${{ needs.check.outputs.version }}.zip \
-            dist/standalone/better-trac.js
+            dist/better-trac.js

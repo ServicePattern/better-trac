@@ -1,6 +1,6 @@
 # Better Trac
 
-Browser extension for [trac.brightpattern.com](https://trac.brightpattern.com). Supports Chrome and Firefox.
+Script for [trac.brightpattern.com](https://trac.brightpattern.com).
 
 Adds:
 
@@ -11,41 +11,11 @@ Adds:
 
 2. **Paste to upload** — `Ctrl+V`/`Cmd+V` outside a text field opens the upload page in a new tab; pasting an image on the upload page fills the file input automatically.
 
-3. **Image Combiner** — click the extension icon to paste, arrange, and combine screenshots into one image, then copy to clipboard.
-
-   ![Image Combiner](.github/assets/image-combiner.png)
-
-## Installation
-
-### Option A — Download release
-
-Download the latest `.zip` from [GitHub Releases](https://github.com/ServicePattern/better-trac/releases) and unzip it.
-
-### Option B — Build from source
+## Build
 
 ```
 yarn install
-yarn build        # extension  → dist/extension/
-yarn build:script # standalone → dist/standalone/
-yarn build:all    # both
+yarn build   # → dist/better-trac.js
 ```
 
-## Build outputs
-
-Two separate bundles:
-
-- **`dist/extension/`** — the browser extension (Chrome/Firefox). Full feature set above.
-- **`dist/standalone/better-trac.js`** — a self-contained script an admin adds to the Trac page for all users, enabling **inline attachment previews** without anyone installing the extension.
-
----
-
-### Load in Chrome
-
-1. Go to [chrome://extensions/](chrome://extensions/)
-2. Enable **Developer mode** (top right).
-3. Click **Load unpacked** → select the `dist/extension/` folder.
-
-### Load in Firefox
-
-1. Go to [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox)
-2. Click **Load Temporary Add-on** → select any file inside `dist/extension/`.
+Add the built `better-trac.js` to the Trac page (e.g. via a site-wide script include) to enable the features for everyone.

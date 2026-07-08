@@ -1,31 +1,25 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import webExtension, { readJsonFile } from "vite-plugin-web-extension";
 
-function generateManifest() {
-  const manifest = readJsonFile("src/extension/manifest.json");
-  const pkg = readJsonFile("package.json");
-  return {
-    name: pkg.name,
-    description: pkg.description,
-    version: pkg.version,
-    ...manifest,
-  };
-}
-
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  build: {
-    outDir: "dist/extension",
-    emptyOutDir: true,
+// IIFE script an admin adds to the Trac page.
+// Output: dist/better-trac.js (self-contained, runs on inject).
+export default defineConfig({
+  publicDir: false,
+  plugins: [tailwindcss()],
+  define: {
+    // Lib builds keep process.env.NODE_ENV (react-dom references it) for a
+    // downstream bundler to replace — there is none here, and the browser
+    // has no `process`, so inline it.
+    "process.env.NODE_ENV": JSON.stringify("production"),
   },
-  plugins: [
-    react(),
-    tailwindcss(),
-    webExtension({
-      manifest: generateManifest,
-      browser: mode === "firefox" ? "firefox" : (process.env.BROWSER || "chrome"),
-    }),
-  ],
-}));
+  build: {
+    outDir: "dist",
+    emptyOutDir: true,
+    lib: {
+      entry: "src/main.ts",
+      formats: ["iife"],
+      name: "BetterTracScript",
+      fileName: () => "better-trac.js",
+    },
+  },
+});

@@ -1,9 +1,11 @@
+import { createRoot } from "react-dom/client";
 import { addStyle, createLayoutFromString } from "../utils/domUtils";
+import css from "./md/options.css?inline";
+import { MdPreview } from "./md/MdPreview";
 
 export function pasteMDPreview(
     attachmentLinkEl: HTMLAnchorElement,
     attachmentUrl: string,
-    openMdPreview: (markdown: string) => void | Promise<unknown>,
 ) {
     addStyle('better-trac-md', `
         .better-trac-md {
@@ -25,10 +27,22 @@ export function pasteMDPreview(
     `)
 
     mdLinkEl.addEventListener('click', async () => {
+        const tab = window.open('', '_blank');
+        if (!tab) return;
+
         const res = await fetch(attachmentUrl);
         const text = await res.text();
 
-        await openMdPreview(text);
+        tab.document.title = "MD Preview";
+
+        const style = tab.document.createElement("style");
+        style.textContent = css;
+        tab.document.head.appendChild(style);
+
+        const container = tab.document.createElement("div");
+        tab.document.body.appendChild(container);
+
+        createRoot(container).render(<MdPreview text={text} />);
     });
 
     attachmentLinkEl.parentElement?.insertBefore(mdLinkEl, attachmentLinkEl)
