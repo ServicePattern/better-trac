@@ -28,7 +28,10 @@ export function pasteMDPreview(
 
     mdLinkEl.addEventListener('click', async () => {
         const tab = window.open('', '_blank');
-        if (!tab) return;
+        if (!tab) {
+            alert('Popup blocked — allow popups for MD preview');
+            return
+        }
 
         const res = await fetch(attachmentUrl);
         const text = await res.text();

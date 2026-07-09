@@ -1,6 +1,9 @@
 import { createLayoutFromString } from "../utils/domUtils";
+import { fixLayoutDescription } from "./fixAttachmentDescriptionLayout";
 
 export function pasteVideoPreview(attachmentLinkEl: HTMLAnchorElement, attachmentUrl: string) {
+    fixLayoutDescription(attachmentLinkEl)
+
     const videoEl = createLayoutFromString(
         `<video
             style="
