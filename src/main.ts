@@ -1,4 +1,5 @@
-import { startAttachmentPreviews } from "./attachmentHandler";
+import { handleAttachmentPreviews } from "./attachmentHandler";
+import { disableAutoSubmit } from "./utils/disableAutoSubmit";
 import { handleAttachmentForm } from "./formHandler";
 import { addPasteListener } from "./pasteListener";
 
@@ -6,7 +7,9 @@ import { addPasteListener } from "./pasteListener";
 main()
 
 function main() {
+    disableAutoSubmit()
+
     addPasteListener()
     handleAttachmentForm()
-    startAttachmentPreviews()
+    handleAttachmentPreviews()
 }

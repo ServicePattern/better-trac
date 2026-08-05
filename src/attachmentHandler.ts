@@ -5,16 +5,8 @@ import { pasteVideoPreview } from "./attachments/videoPreview";
 import { pasteZipPreview } from "./attachments/zipPreview";
 import { pasteImagePreview } from "./attachments/imagePreview";
 
-const PROCESSED_CLASSNAME = 'better-traced'
 
-// Run previews once, then re-run on a timer: changing "Modify Ticket" fields
-// soft-reloads the page, dropping previously injected previews.
-export function startAttachmentPreviews() {
-    handleAttachmentPreviews()
-    setInterval(() => {
-        handleAttachmentPreviews()
-    }, 1000)
-}
+const PROCESSED_CLASSNAME = 'better-traced'
 
 export async function handleAttachmentPreviews() {
     const allLinkEls = document.getElementsByTagName('a');
