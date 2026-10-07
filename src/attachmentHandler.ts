@@ -47,6 +47,7 @@ export async function handleAttachmentPreviews() {
                 return
             }
 
+            // https://trac.brightpattern.com/ticket/49059
             if (attachmentUrl.endsWith('.7z')) {
                 pasteArchivePreview(attachmentLinkEl, attachmentUrl, contentLength, open7z)
                 return
