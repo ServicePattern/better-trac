@@ -1,4 +1,12 @@
-import { Unzip } from "fflate";
+import { Unzip, unzipSync } from "fflate";
+import type { Archive } from "./archive";
+
+export async function openZip(buffer: Uint8Array): Promise<Archive> {
+    return {
+        files: await listZip(buffer),
+        read: filePath => unzipSync(buffer, { filter: file => file.name === filePath })[filePath],
+    };
+}
 
 /**
  * Lists all files in a ZIP archive

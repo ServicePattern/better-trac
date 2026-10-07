@@ -2,7 +2,9 @@ import { fetchHeaders } from "./utils/network";
 import { pasteHarPreview } from "./attachments/harPreview";
 import { pasteMDPreview } from "./attachments/mdPreview";
 import { pasteVideoPreview } from "./attachments/videoPreview";
-import { pasteZipPreview } from "./attachments/zipPreview";
+import { pasteArchivePreview } from "./attachments/archivePreview";
+import { open7z } from "./utils/sevenZip";
+import { openZip } from "./utils/zip";
 import { pasteImagePreview } from "./attachments/imagePreview";
 
 
@@ -41,7 +43,12 @@ export async function handleAttachmentPreviews() {
             }
 
             if (mimeType?.startsWith('application/zip')) {
-                pasteZipPreview(attachmentLinkEl, attachmentUrl, contentLength)
+                pasteArchivePreview(attachmentLinkEl, attachmentUrl, contentLength, openZip)
+                return
+            }
+
+            if (attachmentUrl.endsWith('.7z')) {
+                pasteArchivePreview(attachmentLinkEl, attachmentUrl, contentLength, open7z)
                 return
             }
 

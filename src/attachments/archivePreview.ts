@@ -1,14 +1,15 @@
-import { unzipSync } from "fflate";
 import { addStyle, createLayoutFromString } from "../utils/domUtils";
 import { getMimeByExtension } from "../utils/mime";
-import { listZip, openInBrowser } from "../utils/zip";
+import type { Archive } from "../utils/archive";
+import { openInBrowser } from "../utils/zip";
 
 const MB_10 = 10 * 1024 * 1024;
 
-export async function pasteZipPreview(
+export async function pasteArchivePreview(
     attachmentLinkEl: HTMLAnchorElement,
     attachmentUrl: string,
-    contentLength: number | undefined
+    contentLength: number | undefined,
+    openArchive: (buffer: Uint8Array) => Promise<Archive>
 ) {
     addStyle('better-trac-zip', `
         .better-trac-zip {
@@ -26,7 +27,7 @@ export async function pasteZipPreview(
 
     // https://trac.brightpattern.com/ticket/30659
     if (contentLength === undefined || contentLength < MB_10) {
-        await renderZipTree(attachmentLinkEl, attachmentUrl);
+        await renderArchiveTree(attachmentLinkEl, attachmentUrl, openArchive);
         return;
     }
 
@@ -40,7 +41,7 @@ export async function pasteZipPreview(
         btnEl.textContent = 'Loading…';
         (btnEl as HTMLButtonElement).disabled = true;
         try {
-            await renderZipTree(attachmentLinkEl, attachmentUrl);
+            await renderArchiveTree(attachmentLinkEl, attachmentUrl, openArchive);
             btnEl.remove();
         } catch {
             btnEl.textContent = 'Failed to load';
@@ -50,10 +51,14 @@ export async function pasteZipPreview(
     attachmentLinkEl.parentElement?.insertBefore(btnEl, attachmentLinkEl);
 }
 
-async function renderZipTree(attachmentLinkEl: HTMLAnchorElement, attachmentUrl: string) {
+async function renderArchiveTree(
+    attachmentLinkEl: HTMLAnchorElement,
+    attachmentUrl: string,
+    openArchive: (buffer: Uint8Array) => Promise<Archive>
+) {
     const res = await fetch(attachmentUrl);
     const buffer = new Uint8Array(await res.arrayBuffer());
-    const files = await listZip(buffer);
+    const archive = await openArchive(buffer);
 
     addStyle('better-trac-zip-file', `
         .better-trac-zip-file {
@@ -67,9 +72,9 @@ async function renderZipTree(attachmentLinkEl: HTMLAnchorElement, attachmentUrl:
         }
     `)
 
-    const zipTreeEl = createLayoutFromString(`<div class="better-trac-zip"></div>`)
+    const archiveTreeEl = createLayoutFromString(`<div class="better-trac-zip"></div>`)
 
-    files.map(filePath => {
+    archive.files.map(filePath => {
         const fileEl = createLayoutFromString(`
             <div class="better-trac-zip-file">
                 ${filePath}
@@ -77,8 +82,7 @@ async function renderZipTree(attachmentLinkEl: HTMLAnchorElement, attachmentUrl:
         `)
 
         fileEl.addEventListener('click', async () => {
-            const result = unzipSync(buffer, { filter: file => file.name === filePath });
-            const fileContentBuffer = result[filePath];
+            const fileContentBuffer = archive.read(filePath);
 
             if (!fileContentBuffer) {
                 return
@@ -89,8 +93,8 @@ async function renderZipTree(attachmentLinkEl: HTMLAnchorElement, attachmentUrl:
             openInBrowser(fileContentBuffer, mimeFromExtension);
         });
 
-        zipTreeEl.appendChild(fileEl)
+        archiveTreeEl.appendChild(fileEl)
     })
 
-    attachmentLinkEl.parentElement?.insertBefore(zipTreeEl, attachmentLinkEl)
+    attachmentLinkEl.parentElement?.insertBefore(archiveTreeEl, attachmentLinkEl)
 }
