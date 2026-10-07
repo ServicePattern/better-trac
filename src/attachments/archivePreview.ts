@@ -2,6 +2,7 @@ import { addStyle, createLayoutFromString } from "../utils/domUtils";
 import { getMimeByExtension } from "../utils/mime";
 import type { Archive } from "../utils/archive";
 import { openInBrowser } from "../utils/zip";
+import { pasteVideoPreview } from "./videoPreview";
 
 const MB_10 = 10 * 1024 * 1024;
 
@@ -60,6 +61,10 @@ async function renderArchiveTree(
     const buffer = new Uint8Array(await res.arrayBuffer());
     const archive = await openArchive(buffer);
 
+    if (pasteSingleVideoPreview(attachmentLinkEl, archive)) {
+        return
+    }
+
     addStyle('better-trac-zip-file', `
         .better-trac-zip-file {
             padding: 4px;
@@ -97,4 +102,26 @@ async function renderArchiveTree(
     })
 
     attachmentLinkEl.parentElement?.insertBefore(archiveTreeEl, attachmentLinkEl)
+}
+
+/**
+ * Archive with just one video inside: show the video player instead of the file list
+ */
+function pasteSingleVideoPreview(attachmentLinkEl: HTMLAnchorElement, archive: Archive): boolean {
+    const [filePath, ...otherFiles] = archive.files
+    const mime = filePath && getMimeByExtension(filePath)
+
+    if (otherFiles.length > 0 || !mime?.startsWith('video/')) {
+        return false
+    }
+
+    const data = archive.read(filePath)
+
+    if (!data) {
+        return false
+    }
+
+    const videoUrl = URL.createObjectURL(new Blob([data as BlobPart], { type: mime }))
+    pasteVideoPreview(attachmentLinkEl, videoUrl)
+    return true
 }
